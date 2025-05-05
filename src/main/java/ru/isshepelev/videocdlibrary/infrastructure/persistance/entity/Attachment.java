@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.nio.file.Path;
 
 @Entity
 @Data

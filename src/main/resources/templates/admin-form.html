@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>Панель администратора - Категории</title>
+</head>
+<body>
+<div>
+    <h1>Управление категориями</h1>
+
+    <!-- Форма добавления категории -->
+    <div>
+        <h2>Добавить новую категорию</h2>
+        <form id="addCategoryForm" th:action="@{/admin/add-category}" method="post">
+            <div>
+                <label for="name">Название категории *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div>
+                <label for="description">Описание</label>
+                <textarea id="description" name="description"></textarea>
+            </div>
+            <button type="submit">Создать категорию</button>
+        </form>
+    </div>
+
+    <!-- Список категорий -->
+    <div>
+        <h2>Список категорий</h2>
+
+        <div th:if="${categories.empty}">
+            <p>Нет созданных категорий</p>
+        </div>
+
+        <div th:unless="${categories.empty}">
+            <div th:each="category : ${categories}">
+                <div>
+                    <h3 th:text="${category.name}">Название категории</h3>
+                    <p th:text="${category.description ?: 'Нет описания'}">Описание</p>
+                    <p th:text="${category.videos != null ? 'Видео: ' + category.videos.size() : 'Нет видео'}">Количество видео</p>
+
+                    <!-- Форма добавления видео -->
+                    <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd;">
+                        <h4>Добавить видео в категорию</h4>
+                        <form th:action="@{/admin/add-video/{id}(id=${category.id})}" method="post" enctype="multipart/form-data" class="add-video-form">
+                            <div>
+                                <label>Видео файл</label>
+                                <input type="file" name="file" accept="video/*" required>
+                            </div>
+                            <div>
+                                <label>Название видео</label>
+                                <input type="text" name="videoName" th:value="${videoDto?.videoName}" required>
+                            </div>
+                            <div>
+                                <label>Описание видео</label>
+                                <textarea name="videoDescription" th:text="${videoDto?.videoDescription}"></textarea>
+                            </div>
+                            <button type="submit">Добавить видео</button>
+                        </form>
+                    </div>
+
+                    <form th:action="@{/admin/delete-category/{id}(id=${category.id})}" method="post">
+                        <button type="submit">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Обработка формы добавления категории
+    document.getElementById('addCategoryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: new URLSearchParams(formData),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+    });
+
+    // Подтверждение удаления категории
+    document.querySelectorAll('form[action^="/admin/delete-category"]').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Вы уверены, что хотите удалить эту категорию?')) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Обработка форм добавления видео
+    document.querySelectorAll('.add-video-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    }
+                })
+                .catch(error => console.error('Ошибка:', error));
+        });
+    });
+</script>
+</body>
+</html>

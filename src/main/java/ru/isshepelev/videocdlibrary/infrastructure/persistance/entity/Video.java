@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,7 +20,7 @@ public class Video implements Serializable {
     private String description;
 
     @ManyToMany
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
     @OneToOne
     private Attachment attachment;
