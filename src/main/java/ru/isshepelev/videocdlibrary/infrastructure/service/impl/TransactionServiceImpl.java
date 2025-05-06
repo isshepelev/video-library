@@ -80,7 +80,7 @@ public class TransactionServiceImpl implements TransactionService {
         boolean alreadyPurchased = transactionRepository.existsByUserAndVideoAndIsPurchase(user, video, true);
         if (alreadyPurchased) {
             log.error("Пользователь {} уже купил видео с id {}", user.getUsername(), video.getId());
-            throw new IllegalStateException("Video already purchased");
+            throw new IllegalStateException("Видео уже куплено");
         }
     }
 
@@ -90,7 +90,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (activeRentalExists) {
             log.error("Пользователь {} уже арендовал видео с id {} и аренда еще активна",
                     user.getUsername(), video.getId());
-            throw new IllegalStateException("Active rental already exists");
+            throw new IllegalStateException("Видео уже арендовано и аренда еще активна");
         }
     }
 
