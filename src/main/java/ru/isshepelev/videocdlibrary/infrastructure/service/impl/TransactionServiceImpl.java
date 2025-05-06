@@ -13,6 +13,7 @@ import ru.isshepelev.videocdlibrary.infrastructure.persistance.repository.VideoR
 import ru.isshepelev.videocdlibrary.infrastructure.service.TransactionService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +48,15 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.save(transaction);
 
         log.info("Пользователь {} арендовал видео с id: {} на {} дней", username, videoId, days);
+    }
+
+    @Override
+    public List<Transaction> getUserTransactions(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found: " + username);
+        }
+        return transactionRepository.findByUser(user);
     }
 
     private User findUserOrThrow(String username) {

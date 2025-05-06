@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Профиль пользователя</h2>
+            <p>Добро пожаловать, <span th:text="${user.username}"></span>!</p>
+        </div>
+
+        <div th:if="${!purchases.isEmpty()}">
+            <h3>Купленные видео</h3>
+            <div class="video-list">
+                <div class="video-item" th:each="transaction : ${purchases}">
+                    <h4 th:text="${transaction.video.name}"></h4>
+                    <p th:text="${transaction.video.description}"></p>
+                    <p>Дата покупки: <span th:text="${#temporals.format(transaction.transactionDate, 'dd.MM.yyyy HH:mm')}"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${!rentals.isEmpty()}">
+            <h3>Арендованные видео</h3>
+            <div class="video-list">
+                <div class="video-item" th:each="transaction : ${rentals}">
+                    <h4 th:text="${transaction.video.name}"></h4>
+                    <p th:text="${transaction.video.description}"></p>
+                    <p>Дата аренды: <span th:text="${#temporals.format(transaction.transactionDate, 'dd.MM.yyyy HH:mm')}"></span></p>
+                    <p>Действительно до: <span th:text="${#temporals.format(transaction.expirationDate, 'dd.MM.yyyy HH:mm')}"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${purchases.isEmpty() and rentals.isEmpty()}">
+            <p>У вас пока нет купленных или арендованных видео.</p>
+        </div>
+
+        <div class="auth-footer">
+            <a th:href="@{/}" class="btn">На главную</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
