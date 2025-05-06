@@ -7,79 +7,77 @@
     <title>Панель администратора - Добавление видео</title>
 </head>
 <body>
-<div>
+<div class="admin-container">
     <h1>Управление видео и категориями</h1>
 
     <!-- Форма добавления видео -->
-    <div>
-        <h2>Добавить новое видео</h2>
+    <div class="admin-section">
+        <h2><i class="fas fa-video"></i> Добавить новое видео</h2>
         <form id="addVideoForm" th:action="@{/admin/add-video}" method="post" enctype="multipart/form-data">
-            <div>
+            <div class="form-group">
                 <label>Видео файл *</label>
-                <input type="file" name="file" accept="video/*" required>
+                <input type="file" name="file" class="form-control" accept="video/*" required>
             </div>
-            <div>
+            <div class="form-group">
                 <label>Название видео *</label>
-                <input type="text" name="videoName" required>
+                <input type="text" name="videoName" class="form-control" required>
             </div>
-            <div>
+            <div class="form-group">
                 <label>Описание видео</label>
-                <textarea name="videoDescription"></textarea>
+                <textarea name="videoDescription" class="form-control"></textarea>
             </div>
 
             <!-- Выбор категорий -->
-            <div>
+            <div class="form-group">
                 <label>Категории</label>
                 <div th:if="${categories.empty}">
-                    <p>Нет доступных категорий</p>
+                    <p class="error-message">Нет доступных категорий</p>
                 </div>
-                <div th:unless="${categories.empty}">
-                    <div th:each="category : ${categories}">
+                <div th:unless="${categories.empty}" class="category-checkboxes">
+                    <div th:each="category : ${categories}" style="margin-bottom: 0.5rem;">
                         <input type="checkbox" name="categoryIds" th:value="${category.id}" th:id="'category_' + ${category.id}">
                         <label th:for="'category_' + ${category.id}" th:text="${category.name}">Название категории</label>
                     </div>
                 </div>
             </div>
 
-            <button type="submit">Добавить видео</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Добавить видео</button>
         </form>
     </div>
 
     <!-- Форма добавления категории -->
-    <div>
-        <h2>Добавить новую категорию</h2>
+    <div class="admin-section">
+        <h2><i class="fas fa-folder-plus"></i> Добавить новую категорию</h2>
         <form id="addCategoryForm" th:action="@{/admin/add-category}" method="post">
-            <div>
+            <div class="form-group">
                 <label for="name">Название категории *</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" class="form-control" required>
             </div>
-            <div>
+            <div class="form-group">
                 <label for="description">Описание</label>
-                <textarea id="description" name="description"></textarea>
+                <textarea id="description" name="description" class="form-control"></textarea>
             </div>
-            <button type="submit">Создать категорию</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Создать категорию</button>
         </form>
     </div>
 
     <!-- Список категорий -->
-    <div>
-        <h2>Список категорий</h2>
+    <div class="admin-section">
+        <h2><i class="fas fa-list"></i> Список категорий</h2>
 
         <div th:if="${categories.empty}">
-            <p>Нет созданных категорий</p>
+            <p class="error-message">Нет созданных категорий</p>
         </div>
 
-        <div th:unless="${categories.empty}">
-            <div th:each="category : ${categories}">
-                <div>
-                    <h3 th:text="${category.name}">Название категории</h3>
-                    <p th:text="${category.description ?: 'Нет описания'}">Описание</p>
-                    <p th:text="${category.videos != null ? 'Видео: ' + category.videos.size() : 'Нет видео'}">Количество видео</p>
+        <div th:unless="${categories.empty}" class="category-list">
+            <div th:each="category : ${categories}" class="category-item">
+                <h3 th:text="${category.name}">Название категории</h3>
+                <p th:text="${category.description ?: 'Нет описания'}">Описание</p>
+                <p><i class="fas fa-video"></i> Видео: <span th:text="${category.videos != null ? category.videos.size() : 0}">0</span></p>
 
-                    <form th:action="@{/admin/delete-category/{id}(id=${category.id})}" method="post">
-                        <button type="submit">Удалить категорию</button>
-                    </form>
-                </div>
+                <form th:action="@{/admin/delete-category/{id}(id=${category.id})}" method="post" style="margin-top: 1rem;">
+                    <button type="submit" class="btn btn-secondary"><i class="fas fa-trash-alt"></i> Удалить категорию</button>
+                </form>
             </div>
         </div>
     </div>
