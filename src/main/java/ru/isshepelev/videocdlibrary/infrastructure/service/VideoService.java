@@ -4,8 +4,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.isshepelev.videocdlibrary.ui.dto.VideoDto;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface VideoService {
 
-    void addNewVideoToCategory(Long categoryId, MultipartFile file, VideoDto videoDto) throws IOException;
+    void addNewVideo(MultipartFile file, VideoDto videoDto, List<Long> categoryIds);
 }

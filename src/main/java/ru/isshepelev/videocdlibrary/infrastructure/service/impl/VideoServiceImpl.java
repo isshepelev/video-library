@@ -1,6 +1,5 @@
 package ru.isshepelev.videocdlibrary.infrastructure.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -34,21 +34,21 @@ public class VideoServiceImpl implements VideoService {
 
 
     @Override
-    public void addNewVideoToCategory(Long categoryId, MultipartFile file, VideoDto videoDto) {
+    public void addNewVideo(MultipartFile file, VideoDto videoDto, List<Long> categoryIds) {
         if (file.isEmpty()) {
             log.warn("файл пустой");
             throw new IllegalArgumentException("File cannot be empty");
         }
 
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + categoryId));
-
         try {
             Attachment attachment = saveUploadedFile(file);
-            Video video = createVideo(videoDto, attachment, category);
+            Video video = createVideo(videoDto, attachment);
 
-            linkVideoToCategory(video, category);
-            log.info("добавления видео с именем: "  + video.getName() + " в категорию: " + category.getName());
+            if (categoryIds != null && !categoryIds.isEmpty()) {
+                linkVideoToCategories(video, categoryIds);
+            }
+
+            log.info("добавлено новое видео с именем: " + video.getName());
         } catch (IOException e) {
             log.error("ошибка сохранения файла", e);
             throw new RuntimeException("Failed to save file", e);
@@ -69,18 +69,21 @@ public class VideoServiceImpl implements VideoService {
         return attachmentRepository.save(attachment);
     }
 
-    private Video createVideo(VideoDto videoDto, Attachment attachment, Category category) {
+    private Video createVideo(VideoDto videoDto, Attachment attachment) {
         Video video = new Video();
         video.setAttachment(attachment);
         video.setName(videoDto.getVideoName());
         video.setDescription(videoDto.getVideoDescription());
-        video.getCategories().add(category);
-
         return videoRepository.save(video);
     }
 
-    private void linkVideoToCategory(Video video, Category category) {
-        category.getVideos().add(video);
-        categoryRepository.save(category);
+    private void linkVideoToCategories(Video video, List<Long> categoryIds) {
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+        for (Category category : categories) {
+            video.getCategories().add(category);
+            category.getVideos().add(video);
+            categoryRepository.save(category);
+        }
+        videoRepository.save(video);
     }
 }

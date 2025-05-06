@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.isshepelev.videocdlibrary.infrastructure.persistance.entity.Category;
+import ru.isshepelev.videocdlibrary.infrastructure.persistance.entity.Video;
 import ru.isshepelev.videocdlibrary.infrastructure.persistance.repository.CategoryRepository;
 import ru.isshepelev.videocdlibrary.infrastructure.service.CategoryService;
 import ru.isshepelev.videocdlibrary.ui.dto.CreateCategoryDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -18,7 +18,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> allCategories(){
+    public List<Category> getAllCategories(){
         return categoryRepository.findAll();
     }
 

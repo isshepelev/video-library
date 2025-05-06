@@ -39,10 +39,4 @@ public class AuthenticationController {
         return "login";
     }
 
-
-    @GetMapping("/")
-    public String asd(){
-        return "test";
-    }
-
 }

@@ -4,11 +4,46 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <meta charset="UTF-8">
-    <title>Панель администратора - Категории</title>
+    <title>Панель администратора - Добавление видео</title>
 </head>
 <body>
 <div>
-    <h1>Управление категориями</h1>
+    <h1>Управление видео и категориями</h1>
+
+    <!-- Форма добавления видео -->
+    <div>
+        <h2>Добавить новое видео</h2>
+        <form id="addVideoForm" th:action="@{/admin/add-video}" method="post" enctype="multipart/form-data">
+            <div>
+                <label>Видео файл *</label>
+                <input type="file" name="file" accept="video/*" required>
+            </div>
+            <div>
+                <label>Название видео *</label>
+                <input type="text" name="videoName" required>
+            </div>
+            <div>
+                <label>Описание видео</label>
+                <textarea name="videoDescription"></textarea>
+            </div>
+
+            <!-- Выбор категорий -->
+            <div>
+                <label>Категории</label>
+                <div th:if="${categories.empty}">
+                    <p>Нет доступных категорий</p>
+                </div>
+                <div th:unless="${categories.empty}">
+                    <div th:each="category : ${categories}">
+                        <input type="checkbox" name="categoryIds" th:value="${category.id}" th:id="'category_' + ${category.id}">
+                        <label th:for="'category_' + ${category.id}" th:text="${category.name}">Название категории</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Добавить видео</button>
+        </form>
+    </div>
 
     <!-- Форма добавления категории -->
     <div>
@@ -41,28 +76,8 @@
                     <p th:text="${category.description ?: 'Нет описания'}">Описание</p>
                     <p th:text="${category.videos != null ? 'Видео: ' + category.videos.size() : 'Нет видео'}">Количество видео</p>
 
-                    <!-- Форма добавления видео -->
-                    <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd;">
-                        <h4>Добавить видео в категорию</h4>
-                        <form th:action="@{/admin/add-video/{id}(id=${category.id})}" method="post" enctype="multipart/form-data" class="add-video-form">
-                            <div>
-                                <label>Видео файл</label>
-                                <input type="file" name="file" accept="video/*" required>
-                            </div>
-                            <div>
-                                <label>Название видео</label>
-                                <input type="text" name="videoName" th:value="${videoDto?.videoName}" required>
-                            </div>
-                            <div>
-                                <label>Описание видео</label>
-                                <textarea name="videoDescription" th:text="${videoDto?.videoDescription}"></textarea>
-                            </div>
-                            <button type="submit">Добавить видео</button>
-                        </form>
-                    </div>
-
                     <form th:action="@{/admin/delete-category/{id}(id=${category.id})}" method="post">
-                        <button type="submit">Удалить</button>
+                        <button type="submit">Удалить категорию</button>
                     </form>
                 </div>
             </div>
@@ -93,32 +108,30 @@
             .catch(error => console.error('Ошибка:', error));
     });
 
+    // Обработка формы добавления видео
+    document.getElementById('addVideoForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+    });
+
     // Подтверждение удаления категории
     document.querySelectorAll('form[action^="/admin/delete-category"]').forEach(form => {
         form.addEventListener('submit', function(e) {
             if (!confirm('Вы уверены, что хотите удалить эту категорию?')) {
                 e.preventDefault();
             }
-        });
-    });
-
-    // Обработка форм добавления видео
-    document.querySelectorAll('.add-video-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    }
-                })
-                .catch(error => console.error('Ошибка:', error));
         });
     });
 </script>

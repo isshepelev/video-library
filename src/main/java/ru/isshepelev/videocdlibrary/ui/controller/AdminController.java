@@ -11,6 +11,7 @@ import ru.isshepelev.videocdlibrary.ui.dto.CreateCategoryDto;
 import ru.isshepelev.videocdlibrary.ui.dto.VideoDto;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class AdminController {
 
     @GetMapping("")
     public String mainFrom(Model model){
-        model.addAttribute("categories", categoryService.allCategories());
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "admin-form";
     }
 
@@ -38,12 +39,11 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PostMapping("/add-video/{categoryId}")
-    public String addVideoToCategory(@PathVariable Long categoryId,
-                                     @RequestParam("file") MultipartFile file,
-                                     @ModelAttribute VideoDto videoDto) throws IOException {
-
-        videoService.addNewVideoToCategory(categoryId,file, videoDto);
+    @PostMapping("/add-video")
+    public String addVideo(@RequestParam("file") MultipartFile file,
+                           @RequestParam(value = "categoryIds", required = false) List<Long> categoryIds,
+                           @ModelAttribute VideoDto videoDto) throws IOException {
+        videoService.addNewVideo(file, videoDto, categoryIds);
         return "redirect:/admin";
     }
 

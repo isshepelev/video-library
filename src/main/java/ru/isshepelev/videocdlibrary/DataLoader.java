@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import ru.isshepelev.videocdlibrary.infrastructure.persistance.entity.Category;
 import ru.isshepelev.videocdlibrary.infrastructure.persistance.entity.Role;
 import ru.isshepelev.videocdlibrary.infrastructure.persistance.entity.User;
+import ru.isshepelev.videocdlibrary.infrastructure.persistance.repository.CategoryRepository;
 import ru.isshepelev.videocdlibrary.infrastructure.persistance.repository.RoleRepository;
 import ru.isshepelev.videocdlibrary.infrastructure.persistance.repository.UserRepository;
 
@@ -17,6 +19,7 @@ public class DataLoader implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -41,5 +44,32 @@ public class DataLoader implements CommandLineRunner {
 
         userRepository.save(user1);
         userRepository.save(user2);
+
+        Category category = new Category();
+        category.setName("Драма");
+        category.setDescription("Драма");
+
+        Category category1 = new Category();
+        category1.setName("Комедия");
+        category1.setDescription("Комедия");
+
+        Category category2 = new Category();
+        category2.setName("Ужасы");
+        category2.setDescription("Ужасы");
+
+        Category category3 = new Category();
+        category3.setName("Фантастика");
+        category3.setDescription("Фантастика");
+
+        Category category4 = new Category();
+        category4.setName("Боевик");
+        category4.setDescription("Боевик");
+
+        categoryRepository.save(category);
+        categoryRepository.save(category1);
+        categoryRepository.save(category2);
+        categoryRepository.save(category3);
+        categoryRepository.save(category4);
+
     }
 }

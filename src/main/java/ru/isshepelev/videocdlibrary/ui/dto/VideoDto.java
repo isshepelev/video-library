@@ -5,6 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class VideoDto {
-    String videoName;
-    String videoDescription;
+    private String videoName;
+    private String videoDescription;
 }
