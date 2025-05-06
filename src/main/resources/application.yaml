@@ -14,10 +14,8 @@ spring:
   session:
     timeout: 10m
     store-type: redis
-  kafka:
-    bootstrap-servers: kafka:9092 #localhost:9092 kafka:9092
   redis:
-    host: localhost #redis localhost
+    host: redis #redis localhost
     port: 6379
 
 
