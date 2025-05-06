@@ -1,5 +1,6 @@
 package ru.isshepelev.videocdlibrary.infrastructure.persistance.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class Category implements Serializable {
     private String description;
 
     @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
     private List<Video> videos;
 
 

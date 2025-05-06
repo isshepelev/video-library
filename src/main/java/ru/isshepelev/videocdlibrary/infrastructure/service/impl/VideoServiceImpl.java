@@ -86,4 +86,9 @@ public class VideoServiceImpl implements VideoService {
         }
         videoRepository.save(video);
     }
+
+    @Override
+    public List<Video> getAllVideo(){
+        return videoRepository.findAll();
+    }
 }

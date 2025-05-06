@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Видеотека</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Видеотека</h2>
+        </div>
+
+        <div class="form-group">
+            <label for="categorySelect">Выберите категорию:</label>
+            <select id="categorySelect" class="form-control">
+                <option value="all">Все видео</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:text="${category.name}"></option>
+            </select>
+        </div>
+
+        <div id="videosContainer">
+            <!-- Здесь будут отображаться видео -->
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Загрузка видео при изменении выбора категории
+        $('#categorySelect').change(function() {
+            const categoryId = $(this).val();
+            loadVideos(categoryId);
+        });
+
+        // Загружаем все видео при первой загрузке страницы
+        loadVideos('all');
+
+        function loadVideos(categoryId) {
+            let url;
+            if (categoryId === 'all') {
+                // Здесь нужно добавить endpoint для получения всех видео, если его нет
+                url = '/api/videos/all';
+            } else {
+                url = '/api/videos/by-category/' + categoryId;
+            }
+
+            $.get(url, function(videos) {
+                displayVideos(videos);
+            }).fail(function() {
+                $('#videosContainer').html('<p class="error-message">Ошибка загрузки видео</p>');
+            });
+        }
+
+        function displayVideos(videos) {
+            const container = $('#videosContainer');
+            container.empty();
+
+            if (videos.length === 0) {
+                container.html('<p>В этой категории нет видео</p>');
+                return;
+            }
+
+            videos.forEach(function(video) {
+                const videoElement = `
+                        <div class="video-item" style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">
+                            <h3>${video.name}</h3>
+                            <p>${video.description || 'Описание отсутствует'}</p>
+                            <div class="video-actions" style="display: flex; gap: 10px; margin-top: 10px;">
+                                <button class="btn btn-primary rent-btn" data-video-id="${video.id}">Арендовать</button>
+                                <button class="btn btn-primary buy-btn" data-video-id="${video.id}">Купить</button>
+                            </div>
+                        </div>
+                    `;
+                container.append(videoElement);
+            });
+
+            // Обработчики для кнопок
+            $('.rent-btn').click(function() {
+                const videoId = $(this).data('video-id');
+                alert(`Аренда видео с ID: ${videoId}`);
+                // Здесь можно добавить логику аренды
+            });
+
+            $('.buy-btn').click(function() {
+                const videoId = $(this).data('video-id');
+                alert(`Покупка видео с ID: ${videoId}`);
+                // Здесь можно добавить логику покупки
+            });
+        }
+    });
+</script>
+</body>
+</html>

@@ -13,4 +13,7 @@ public interface CategoryService {
     void createCategory(CreateCategoryDto createCategoryDto);
 
     void deleteCategoryById(Long id);
+
+    List<Video> getVideosByCategory(Long categoryId);
+
 }

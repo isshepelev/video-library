@@ -1,5 +1,6 @@
 package ru.isshepelev.videocdlibrary.infrastructure.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,4 +41,12 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    @Override
+    public List<Video> getVideosByCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .map(Category::getVideos).orElseThrow(() -> {
+                    log.error("Категория с id {} не найдена", categoryId);
+                    return new EntityNotFoundException("Category not found with id: " + categoryId);
+                });
+    }
 }
