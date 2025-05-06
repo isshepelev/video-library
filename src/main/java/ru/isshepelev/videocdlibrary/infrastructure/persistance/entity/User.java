@@ -24,11 +24,4 @@ public class User implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
-
-    @OneToMany
-    private List<Video> buyVideos;
-
-    @OneToMany
-    private List<Video> arendVideos;
-
 }

@@ -19,6 +19,7 @@ public class Transaction implements Serializable {
     @ManyToOne
     private Video video;
 
+    @Column(name = "is_purchase")
     private boolean isPurchase;  // true для покупки false для аренды
     private LocalDateTime transactionDate;
     private LocalDateTime expirationDate;

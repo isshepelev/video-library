@@ -24,6 +24,17 @@
             </select>
         </div>
 
+        <!-- Модальное окно для выбора дней аренды -->
+        <div id="rentModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; z-index:1000; border:1px solid #ddd; border-radius:5px;">
+            <h3>Выберите количество дней аренды</h3>
+            <input type="number" id="daysInput" min="1" value="1" style="width:100%; padding:8px; margin:10px 0;">
+            <div style="display:flex; justify-content:space-between;">
+                <button id="confirmRentBtn" class="btn btn-primary" style="padding:8px 16px;">Подтвердить</button>
+                <button id="cancelRentBtn" class="btn btn-secondary" style="padding:8px 16px;">Отмена</button>
+            </div>
+        </div>
+        <div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999;"></div>
+
         <div id="videosContainer">
             <!-- Здесь будут отображаться видео -->
         </div>
@@ -31,6 +42,8 @@
 </div>
 
 <script>
+    let currentVideoIdForRent = null;
+
     $(document).ready(function() {
         // Загрузка видео при изменении выбора категории
         $('#categorySelect').change(function() {
@@ -41,10 +54,45 @@
         // Загружаем все видео при первой загрузке страницы
         loadVideos('all');
 
+        // Обработчики для модального окна
+        $('#confirmRentBtn').click(function() {
+            const days = $('#daysInput').val();
+            if (days > 0 && currentVideoIdForRent) {
+                $.post({
+                    url: `/transactional/rent/${currentVideoIdForRent}`,
+                    data: { days: days },
+                    success: function(response) {
+                        alert('Видео успешно арендовано на ' + days + ' дней!');
+                        closeRentModal();
+                    },
+                    error: function(xhr) {
+                        alert('Ошибка при аренде видео: ' + xhr.responseText);
+                        closeRentModal();
+                    }
+                });
+            } else {
+                alert('Пожалуйста, введите корректное количество дней');
+            }
+        });
+
+        $('#cancelRentBtn').click(function() {
+            closeRentModal();
+        });
+
+        function openRentModal(videoId) {
+            currentVideoIdForRent = videoId;
+            $('#daysInput').val(1);
+            $('#rentModal, #modalOverlay').show();
+        }
+
+        function closeRentModal() {
+            currentVideoIdForRent = null;
+            $('#rentModal, #modalOverlay').hide();
+        }
+
         function loadVideos(categoryId) {
             let url;
             if (categoryId === 'all') {
-                // Здесь нужно добавить endpoint для получения всех видео, если его нет
                 url = '/api/videos/all';
             } else {
                 url = '/api/videos/by-category/' + categoryId;
@@ -68,29 +116,40 @@
 
             videos.forEach(function(video) {
                 const videoElement = `
-                        <div class="video-item" style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">
-                            <h3>${video.name}</h3>
-                            <p>${video.description || 'Описание отсутствует'}</p>
-                            <div class="video-actions" style="display: flex; gap: 10px; margin-top: 10px;">
-                                <button class="btn btn-primary rent-btn" data-video-id="${video.id}">Арендовать</button>
-                                <button class="btn btn-primary buy-btn" data-video-id="${video.id}">Купить</button>
-                            </div>
+                    <div class="video-item" style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">
+                        <h3>${video.name}</h3>
+                        <p>${video.description || 'Описание отсутствует'}</p>
+                        <div class="video-actions" style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button class="btn btn-primary rent-btn" data-video-id="${video.id}">Арендовать</button>
+                            <button class="btn btn-primary buy-btn" data-video-id="${video.id}">Купить</button>
                         </div>
-                    `;
+                    </div>
+                `;
                 container.append(videoElement);
             });
 
-            // Обработчики для кнопок
+            // Обработчик для кнопки "Арендовать"
             $('.rent-btn').click(function() {
                 const videoId = $(this).data('video-id');
-                alert(`Аренда видео с ID: ${videoId}`);
-                // Здесь можно добавить логику аренды
+                openRentModal(videoId);
             });
 
+            // Обработчик для кнопки "Купить"
             $('.buy-btn').click(function() {
                 const videoId = $(this).data('video-id');
-                alert(`Покупка видео с ID: ${videoId}`);
-                // Здесь можно добавить логику покупки
+                buyVideo(videoId);
+            });
+        }
+
+        function buyVideo(videoId) {
+            $.post({
+                url: `/transactional/buy/${videoId}`,
+                success: function(response) {
+                    alert('Видео успешно куплено!');
+                },
+                error: function(xhr) {
+                    alert('Ошибка при покупке видео: ' + xhr.responseText);
+                }
             });
         }
     });
