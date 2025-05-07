@@ -7,6 +7,20 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+<style>
+    .video-item {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    video {
+        max-width: 100%;
+        margin-top: 10px;
+        background-color: #000;
+    }
+</style>
 <body>
 <div class="auth-container">
     <div class="auth-card">
@@ -22,6 +36,10 @@
                     <h4 th:text="${transaction.video.name}"></h4>
                     <p th:text="${transaction.video.description}"></p>
                     <p><i class="fas fa-calendar-alt"></i> Дата покупки: <span th:text="${#temporals.format(transaction.transactionDate, 'dd.MM.yyyy HH:mm')}"></span></p>
+                    <video width="320" height="240" controls>
+                        <source th:src="@{'/video/' + ${transaction.video.id}}" type="video/mp4">
+                        Ваш браузер не поддерживает видео тег.
+                    </video>
                 </div>
             </div>
         </div>
@@ -34,6 +52,10 @@
                     <p th:text="${transaction.video.description}"></p>
                     <p><i class="fas fa-calendar-alt"></i> Дата аренды: <span th:text="${#temporals.format(transaction.transactionDate, 'dd.MM.yyyy HH:mm')}"></span></p>
                     <p><i class="fas fa-hourglass-end"></i> Действительно до: <span th:text="${#temporals.format(transaction.expirationDate, 'dd.MM.yyyy HH:mm')}"></span></p>
+                    <video width="320" height="240" controls>
+                        <source th:src="@{'/video/' + ${transaction.video.id}}" type="video/mp4">
+                        Ваш браузер не поддерживает видео тег.
+                    </video>
                 </div>
             </div>
         </div>

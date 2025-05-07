@@ -12,4 +12,6 @@ public interface VideoService {
     void addNewVideo(MultipartFile file, VideoDto videoDto, List<Long> categoryIds);
 
     List<Video> getAllVideo();
+
+    Video findById(Long videoId);
 }

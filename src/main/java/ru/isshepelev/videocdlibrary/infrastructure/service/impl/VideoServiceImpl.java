@@ -91,4 +91,10 @@ public class VideoServiceImpl implements VideoService {
     public List<Video> getAllVideo(){
         return videoRepository.findAll();
     }
+
+    @Override
+    public Video findById(Long videoId) {
+        return videoRepository.findById(videoId)
+                .orElseThrow(() -> new IllegalArgumentException("Video not found with id: " + videoId));
+    }
 }

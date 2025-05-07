@@ -103,4 +103,15 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setExpirationDate(expirationDate);
         return transaction;
     }
+
+
+
+    @Override
+    public boolean hasAccessToVideo(User user, Video video) {
+        boolean hasPurchase = transactionRepository.existsByUserAndVideoAndIsPurchase(user, video, true);
+        boolean hasActiveRental = transactionRepository.existsByUserAndVideoAndIsPurchaseAndExpirationDateAfter(
+                user, video, false, LocalDateTime.now());
+
+        return hasPurchase || hasActiveRental;
+    }
 }

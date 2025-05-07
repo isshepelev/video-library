@@ -1,8 +1,9 @@
 package ru.isshepelev.videocdlibrary.infrastructure.service;
 
 import ru.isshepelev.videocdlibrary.infrastructure.persistance.entity.Transaction;
+import ru.isshepelev.videocdlibrary.infrastructure.persistance.entity.User;
+import ru.isshepelev.videocdlibrary.infrastructure.persistance.entity.Video;
 
-import java.security.Principal;
 import java.util.List;
 
 public interface TransactionService {
@@ -13,4 +14,5 @@ public interface TransactionService {
 
     List<Transaction> getUserTransactions(String username);
 
+    boolean hasAccessToVideo(User user, Video video);
 }
