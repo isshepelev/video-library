@@ -17,24 +17,25 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
+
     private final CategoryService categoryService;
     private final VideoService videoService;
 
     @GetMapping("")
-    public String mainFrom(Model model){
+    public String mainFrom(Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
         return "admin-form";
     }
 
     @PostMapping("/add-category")
     @ResponseBody
-    public String addCategory(CreateCategoryDto createCategoryDto){
+    public String addCategory(CreateCategoryDto createCategoryDto) {
         categoryService.createCategory(createCategoryDto);
         return "redirect:/admin";
     }
 
     @PostMapping("/delete-category/{id}")
-    public String deleteCategory(@PathVariable Long id){
+    public String deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
         return "redirect:/admin";
     }

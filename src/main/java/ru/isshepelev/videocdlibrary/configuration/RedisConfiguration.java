@@ -10,6 +10,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfiguration {
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory(@Value("${spring.redis.host}") String host) {
         return new LettuceConnectionFactory(host, 6379);

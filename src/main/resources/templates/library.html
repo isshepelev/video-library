@@ -16,14 +16,17 @@
         font-size: 0.9em;
         display: inline-block;
     }
+
     .status-owned {
         background-color: #d4edda;
         color: #155724;
     }
+
     .status-rented {
         background-color: #fff3cd;
         color: #856404;
     }
+
     .error-message {
         color: #dc3545;
         margin-top: 5px;
@@ -71,9 +74,9 @@
 <script>
     let currentVideoIdForRent = null;
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Загрузка видео при изменении выбора категории
-        $('#categorySelect').change(function() {
+        $('#categorySelect').change(function () {
             const categoryId = $(this).val();
             loadVideos(categoryId);
         });
@@ -82,7 +85,7 @@
         loadVideos('all');
 
         // Обработчики для модального окна аренды
-        $('#confirmRentBtn').click(function() {
+        $('#confirmRentBtn').click(function () {
             const days = $('#daysInput').val();
             if (days > 0 && currentVideoIdForRent) {
                 rentVideo(currentVideoIdForRent, days);
@@ -91,18 +94,18 @@
             }
         });
 
-        $('#cancelRentBtn').click(function() {
+        $('#cancelRentBtn').click(function () {
             closeRentModal();
         });
 
         // Обработчик для кнопок "Арендовать"
-        $(document).on('click', '.rent-btn', function() {
+        $(document).on('click', '.rent-btn', function () {
             const videoId = $(this).data('video-id');
             openRentModal(videoId);
         });
 
         // Обработчик для кнопок "Купить"
-        $(document).on('click', '.buy-btn', function() {
+        $(document).on('click', '.buy-btn', function () {
             const videoId = $(this).data('video-id');
             buyVideo(videoId);
         });
@@ -117,10 +120,10 @@
         }
 
         $.get(url)
-            .done(function(videos) {
+            .done(function (videos) {
                 displayVideos(videos);
             })
-            .fail(function() {
+            .fail(function () {
                 $('#videosContainer').html('<p class="error-message">Ошибка загрузки видео</p>');
             });
     }
@@ -134,7 +137,7 @@
             return;
         }
 
-        videos.forEach(function(video) {
+        videos.forEach(function (video) {
             const statusHtml = getStatusHtml(video);
             const buttonsHtml = getButtonsHtml(video);
 
@@ -206,11 +209,11 @@
 
         $.post({
             url: `/transactional/buy/${videoId}`,
-            success: function() {
+            success: function () {
                 showSuccessMessage('Видео успешно куплено!');
                 reloadVideos();
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 showError(videoId, xhr.responseText || 'Ошибка при покупке видео');
             }
         });
@@ -221,13 +224,13 @@
 
         $.post({
             url: `/transactional/rent/${videoId}`,
-            data: { days: days },
-            success: function() {
+            data: {days: days},
+            success: function () {
                 showSuccessMessage(`Видео успешно арендовано на ${days} дней!`);
                 closeRentModal();
                 reloadVideos();
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 showError(videoId, xhr.responseText || 'Ошибка при аренде видео');
                 closeRentModal();
             }

@@ -16,6 +16,7 @@ import java.util.Set;
 @Component
 @AllArgsConstructor
 public class DataLoader implements CommandLineRunner {
+
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

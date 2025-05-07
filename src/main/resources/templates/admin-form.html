@@ -35,8 +35,10 @@
                 </div>
                 <div th:unless="${categories.empty}" class="category-checkboxes">
                     <div th:each="category : ${categories}" style="margin-bottom: 0.5rem;">
-                        <input type="checkbox" name="categoryIds" th:value="${category.id}" th:id="'category_' + ${category.id}">
-                        <label th:for="'category_' + ${category.id}" th:text="${category.name}">Название категории</label>
+                        <input type="checkbox" name="categoryIds" th:value="${category.id}"
+                               th:id="'category_' + ${category.id}">
+                        <label th:for="'category_' + ${category.id}" th:text="${category.name}">Название
+                            категории</label>
                     </div>
                 </div>
             </div>
@@ -73,10 +75,13 @@
             <div th:each="category : ${categories}" class="category-item">
                 <h3 th:text="${category.name}">Название категории</h3>
                 <p th:text="${category.description ?: 'Нет описания'}">Описание</p>
-                <p><i class="fas fa-video"></i> Видео: <span th:text="${category.videos != null ? category.videos.size() : 0}">0</span></p>
+                <p><i class="fas fa-video"></i> Видео: <span
+                        th:text="${category.videos != null ? category.videos.size() : 0}">0</span></p>
 
-                <form th:action="@{/admin/delete-category/{id}(id=${category.id})}" method="post" style="margin-top: 1rem;">
-                    <button type="submit" class="btn btn-secondary"><i class="fas fa-trash-alt"></i> Удалить категорию</button>
+                <form th:action="@{/admin/delete-category/{id}(id=${category.id})}" method="post"
+                      style="margin-top: 1rem;">
+                    <button type="submit" class="btn btn-secondary"><i class="fas fa-trash-alt"></i> Удалить категорию
+                    </button>
                 </form>
             </div>
         </div>
@@ -85,7 +90,7 @@
 
 <script>
     // Обработка формы добавления категории
-    document.getElementById('addCategoryForm').addEventListener('submit', function(e) {
+    document.getElementById('addCategoryForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const form = e.target;
@@ -107,7 +112,7 @@
     });
 
     // Обработка формы добавления видео
-    document.getElementById('addVideoForm').addEventListener('submit', function(e) {
+    document.getElementById('addVideoForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const formData = new FormData(this);
@@ -126,7 +131,7 @@
 
     // Подтверждение удаления категории
     document.querySelectorAll('form[action^="/admin/delete-category"]').forEach(form => {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             if (!confirm('Вы уверены, что хотите удалить эту категорию?')) {
                 e.preventDefault();
             }

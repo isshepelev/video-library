@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 @RequiredArgsConstructor
 @Slf4j
 public class VideoStreamingServiceImpl implements VideoStreamingService {
+
     private final VideoService videoService;
     private final TransactionService transactionService;
     private final UserRepository userRepository;

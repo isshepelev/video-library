@@ -13,6 +13,7 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 public class VideoStreamController {
+
     private final VideoStreamingService videoStreamingService;
 
     @GetMapping("/video/{videoId}")

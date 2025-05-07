@@ -25,6 +25,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class VideoServiceImpl implements VideoService {
+
     private final VideoRepository videoRepository;
     private final AttachmentRepository attachmentRepository;
     private final CategoryRepository categoryRepository;
@@ -88,7 +89,7 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public List<Video> getAllVideo(){
+    public List<Video> getAllVideo() {
         return videoRepository.findAll();
     }
 

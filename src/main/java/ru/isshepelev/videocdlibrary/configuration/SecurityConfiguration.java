@@ -17,6 +17,7 @@ import ru.isshepelev.videocdlibrary.infrastructure.service.CustomUserDetailsServ
 @AllArgsConstructor
 @Slf4j
 public class SecurityConfiguration {
+
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
@@ -25,7 +26,7 @@ public class SecurityConfiguration {
                 .csrf(c -> c.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register").permitAll()
-                        .requestMatchers("/admin/**").hasAnyRole( "ADMIN")
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )

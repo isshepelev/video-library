@@ -15,11 +15,12 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class LibraryController {
+
     private final CategoryService categoryService;
     private final VideoService videoService;
 
     @GetMapping("")
-    public String libraryForm(Model model){
+    public String libraryForm(Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
         return "library";
     }

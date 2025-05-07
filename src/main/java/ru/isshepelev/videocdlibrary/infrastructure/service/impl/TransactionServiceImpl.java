@@ -19,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class TransactionServiceImpl implements TransactionService {
+
     private final TransactionRepository transactionRepository;
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
@@ -62,7 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
     private User findUserOrThrow(String username) {
         if (userRepository.existsByUsername(username)) {
             return userRepository.findByUsername(username);
-        }else {
+        } else {
             log.error("Пользователь с именем {} не найден", username);
             throw new UsernameNotFoundException("User not found by username " + username);
         }
@@ -103,7 +104,6 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setExpirationDate(expirationDate);
         return transaction;
     }
-
 
 
     @Override

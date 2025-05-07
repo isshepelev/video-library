@@ -16,10 +16,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
+
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> getAllCategories(){
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
@@ -34,9 +35,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategoryById(Long id) {
-        if (categoryRepository.existsById(id)){
+        if (categoryRepository.existsById(id)) {
             categoryRepository.deleteById(id);
-        }else {
+        } else {
             log.error("Категория с id {} не найдена", id);
         }
     }

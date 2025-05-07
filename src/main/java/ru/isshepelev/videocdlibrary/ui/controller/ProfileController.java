@@ -19,10 +19,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/profile")
 @RequiredArgsConstructor
 public class ProfileController {
+
     private final UserService userService;
     private final TransactionService transactionService;
-
-
 
 
     @GetMapping("")

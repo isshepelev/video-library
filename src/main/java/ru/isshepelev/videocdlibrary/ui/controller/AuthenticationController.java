@@ -15,6 +15,7 @@ import ru.isshepelev.videocdlibrary.infrastructure.service.UserService;
 @AllArgsConstructor
 @Slf4j
 public class AuthenticationController {
+
     private final UserService userService;
 
     @GetMapping("/register")
