@@ -21,7 +21,7 @@ public class Video implements Serializable {
     @ManyToMany
     private Set<Category> categories = new HashSet<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Attachment attachment;
 
 }
