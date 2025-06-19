@@ -18,7 +18,7 @@ public class Category implements Serializable {
     private String name;
     private String description;
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Video> videos;
 
